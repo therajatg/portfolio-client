@@ -1,8 +1,21 @@
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const res = await axios.post("http://192.168.29.12:5000/api/auth/signup");
+    console.log(res.data.message);
+  };
+
   return (
-    <Form inline>
+    <Form className="w-50 m-5" onSubmit={submitHandler}>
       <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
         <Label for="exampleEmail" className="mr-sm-2">
           Email
@@ -12,6 +25,8 @@ export const LoginPage = () => {
           name="email"
           id="exampleEmail"
           placeholder="something@idk.cool"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </FormGroup>
       <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -23,11 +38,14 @@ export const LoginPage = () => {
           name="password"
           id="examplePassword"
           placeholder="don't tell!"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </FormGroup>
-      <Button>Submit</Button>
-      <p>Or, if you are a new user</p>
-      <Button>SignUp</Button>
+      <Button type="submit">Submit</Button>
+      <br />
+      <span>Or, if you are a new user</span>
+      <Button onClick={() => navigate("/signup")}>SignUp</Button>
     </Form>
   );
 };

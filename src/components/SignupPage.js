@@ -1,8 +1,47 @@
+import { useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const SignupPage = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://192.168.29.12:5000/api/auth/signup",
+        {
+          name,
+          email,
+          password,
+        }
+        //  withCredentials: true,
+      );
+      // navigate("/blogs");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <Form inline>
+    <Form className="w-50 m-5" onSubmit={submitHandler}>
+      <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+        <Label for="exampleEmail" className="mr-sm-2">
+          Name
+        </Label>
+        <Input
+          type="text"
+          name="name"
+          id="exampleEmail"
+          placeholder="Enter Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </FormGroup>
       <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
         <Label for="exampleEmail" className="mr-sm-2">
           Email
@@ -12,6 +51,8 @@ export const SignupPage = () => {
           name="email"
           id="exampleEmail"
           placeholder="something@idk.cool"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </FormGroup>
       <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -23,9 +64,11 @@ export const SignupPage = () => {
           name="password"
           id="examplePassword"
           placeholder="don't tell!"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </FormGroup>
-      <Button>SignUp</Button>
+      <Button type="submit">SignUp</Button>
     </Form>
   );
 };
