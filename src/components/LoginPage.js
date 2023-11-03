@@ -2,16 +2,30 @@ import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../context/authContext";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setAuth } = useAuth();
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const res = await axios.post("http://192.168.29.12:5000/api/auth/signup");
-    console.log(res.data.message);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+      setAuth({ accessToken: res.data.accessToken, name: res.data.name });
+      navigate("/blogs");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

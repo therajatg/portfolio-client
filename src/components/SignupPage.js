@@ -2,26 +2,29 @@ import { useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 export const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://192.168.29.12:5000/api/auth/signup",
+        "http://localhost:5000/api/auth/signup",
         {
           name,
           email,
           password,
-        }
-        //  withCredentials: true,
+        },
+        { withCredentials: true }
       );
-      // navigate("/blogs");
+      setAuth({ accessToken: res.data.accessToken, name: res.data.name });
+      navigate("/blogs");
     } catch (error) {
       console.log(error);
     }
